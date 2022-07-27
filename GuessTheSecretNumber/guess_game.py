@@ -5,7 +5,7 @@ import datetime
 
 secret = random.randint(1, 30)
 attempts = 0
-wrong_attempts = 0
+wrong_attempts = []
 
 with open("score_list.json", "r") as score_file:
     score_list = json.loads(score_file.read())
@@ -34,8 +34,8 @@ while True:
         print("Attempts needed: " + str(attempts))
         break
     elif guess > secret:
-        wrong_attempts += 1
+        wrong_attempts.append(guess)
         print("You are  wrong ... try something smaller")
     elif guess < secret:
-        wrong_attempts += 1
+        wrong_attempts.append(guess)
         print("You are wrong ... try something bigger")
