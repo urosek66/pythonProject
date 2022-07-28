@@ -4,65 +4,44 @@ import datetime
 
 
 def play_game(level):
+    secret = random.randint(1, 30)
+    attempts = 0
+    wrong_attempts = []
+    score_list = get_score_list()
 
-    if level == "easy":
+    name = input("Enter your name: ")
 
-        secret = random.randint(1, 30)
-        attempts = 0
-        wrong_attempts = []
-        score_list = get_score_list()
+    while True:
+        guess = int(input("Guess the secret number (between 1 and 30): "))
+        attempts += 1
 
-        name = input("Enter your name: ")
+        if guess == secret:
+            score_list.append({"player_name": name, "attempts": attempts, "date": str(datetime.datetime.now()),
+                               "number": secret, "wrong_guesses": wrong_attempts, "game_level": level})
 
-        while True:
-            guess = int(input("Guess the secret number (between 1 and 30): "))
-            attempts += 1
+            with open("score_list.json", "w") as score_file:
+                score_file.write(json.dumps(score_list))
 
-            if guess == secret:
-                score_list.append({"player_name": name, "attempts": attempts, "date": str(datetime.datetime.now()),
-                                   "number": secret, "wrong_guesses": wrong_attempts, "game_level": level})
+            print("You've guessed it - congratulations! It's number " + str(secret))
+            print("Attempts needed: " + str(attempts))
+            break
 
-                with open("score_list.json", "w") as score_file:
-                    score_file.write(json.dumps(score_list))
+        elif guess != secret:
+            if level == "easy":
+                if guess > secret:
+                    wrong_attempts.append(guess)
+                    print("Your guess is not correct... try something smaller")
+                elif guess < secret:
+                    wrong_attempts.append(guess)
+                    print("Your guess is not correct... try something bigger")
+            elif level == "hard":
 
-                print("You've guessed it - congratulations! It's number " + str(secret))
-                print("Attempts needed: " + str(attempts))
-                break
-            elif guess > secret:
-                wrong_attempts.append(guess)
-                print("Your guess is not correct... try something smaller")
-            elif guess < secret:
-                wrong_attempts.append(guess)
-                print("Your guess is not correct... try something bigger")
-    elif level == "hard":
-
-        secret = random.randint(1, 30)
-        attempts = 0
-        wrong_attempts = []
-        score_list = get_score_list()
-
-        name = input("Enter your name: ")
-
-        while True:
-            guess = int(input("Guess the secret number (between 1 and 30): "))
-            attempts += 1
-
-            if guess == secret:
-                score_list.append({"player_name": name, "attempts": attempts, "date": str(datetime.datetime.now()),
-                                   "number": secret, "wrong_guesses": wrong_attempts, "game_level": level})
-
-                with open("score_list.json", "w") as score_file:
-                    score_file.write(json.dumps(score_list))
-
-                print("You've guessed it - congratulations! It's number " + str(secret))
-                print("Attempts needed: " + str(attempts))
-                break
-            elif guess > secret:
-                wrong_attempts.append(guess)
-                print("You are wrong try again")
-            elif guess < secret:
-                wrong_attempts.append(guess)
-                print("Your are wrong try again")
+                if guess > secret:
+                    wrong_attempts.append(guess)
+                    print("You are wrong try again")
+                elif guess < secret:
+                    wrong_attempts.append(guess)
+                    print("Your are wrong try again")
 
 
 def get_score_list():
